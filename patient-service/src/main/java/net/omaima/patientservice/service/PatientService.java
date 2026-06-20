@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 @AllArgsConstructor
 public class PatientService {
@@ -17,9 +19,11 @@ public class PatientService {
 
     public List<PatientResponseDTO> getPatients(){
         List<Patient> patients = patientRepository.findAll();
-        List<PatientResponseDTO> patientResponseDTOs = patients.stream().map(patient-> PatientMapper.toDTO(patient)).toList();
+        List<PatientResponseDTO> patientResponseDTOs = patients.stream().map(PatientMapper::toDTO).toList();
 
         return patientResponseDTOs;
     }
+
+
 
 }
