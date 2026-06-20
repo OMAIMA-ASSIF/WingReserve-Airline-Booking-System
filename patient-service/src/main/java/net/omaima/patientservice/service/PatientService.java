@@ -1,6 +1,7 @@
 package net.omaima.patientservice.service;
 
 import lombok.AllArgsConstructor;
+import net.omaima.patientservice.dto.PatientRequestDTO;
 import net.omaima.patientservice.dto.PatientResponseDTO;
 import net.omaima.patientservice.mapper.PatientMapper;
 import net.omaima.patientservice.model.Patient;
@@ -19,11 +20,14 @@ public class PatientService {
 
     public List<PatientResponseDTO> getPatients(){
         List<Patient> patients = patientRepository.findAll();
-        List<PatientResponseDTO> patientResponseDTOs = patients.stream().map(PatientMapper::toDTO).toList();
 
-        return patientResponseDTOs;
+        return patients.stream().map(PatientMapper::toDTO).toList();
     }
 
-
+    public PatientResponseDTO createPatient(PatientRequestDTO patientRequestDTO) {
+        Patient newPatient = patientRepository.save(
+                PatientMapper.toModel(patientRequestDTO));
+        return PatientMapper.toDTO(newPatient);
+    }
 
 }
