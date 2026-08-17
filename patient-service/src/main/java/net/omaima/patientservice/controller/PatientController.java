@@ -54,7 +54,7 @@ public class PatientController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete Patient")
-    public ResponseEntity<Void> deletePatient(UUID id){
+    public ResponseEntity<Void> deletePatient(@PathVariable UUID id){
         patientService.deletePatient(id);
         return ResponseEntity.ok().build();
     }
