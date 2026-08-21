@@ -6,6 +6,7 @@ import net.omaima.patientservice.dto.PatientResponseDTO;
 import net.omaima.patientservice.exception.EmailAlreadyExistsException;
 import net.omaima.patientservice.exception.PatientNotFoundException;
 import net.omaima.patientservice.grpc.BillingServiceGrpcClient;
+import net.omaima.patientservice.kafka.KafkaProducer;
 import net.omaima.patientservice.mapper.PatientMapper;
 import net.omaima.patientservice.model.Patient;
 import net.omaima.patientservice.repository.PatientRepository;
@@ -23,6 +24,7 @@ import static java.util.stream.Collectors.toList;
 public class PatientService {
     private final PatientRepository patientRepository;
     private final BillingServiceGrpcClient billingServiceGrpcClient;
+    private final KafkaProducer kafkaProducer;
 
     public List<PatientResponseDTO> getPatients(){
         List<Patient> patients = patientRepository.findAll();
@@ -39,6 +41,7 @@ public class PatientService {
         Patient newPatient = patientRepository.save(
                 PatientMapper.toModel(patientRequestDTO));
         billingServiceGrpcClient.createBillingAccount(newPatient.getId().toString(), newPatient.getName(), newPatient.getEmail());
+        kafkaProducer.sendEvent(newPatient);
         return PatientMapper.toDTO(newPatient);
     }
 
