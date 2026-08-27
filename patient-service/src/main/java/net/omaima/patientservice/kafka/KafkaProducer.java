@@ -28,6 +28,7 @@ public class KafkaProducer {
 
         try{
             kafkaTemplate.send("patient", event.toByteArray()); // to send it to the patient topic
+            log.info("✅ Successfully sent PatientCreated event to Kafka topic 'patient' for ID: {}", patient.getId());
         }catch(Exception e){
             log.error("Error sending PatientCreated event : {}", event);
         }
