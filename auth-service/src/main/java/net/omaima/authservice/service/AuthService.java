@@ -1,5 +1,6 @@
 package net.omaima.authservice.service;
 
+import io.jsonwebtoken.JwtException;
 import net.omaima.authservice.dto.LoginRequestDTO;
 import net.omaima.authservice.util.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +29,15 @@ public class AuthService {
                 .map(u->jwtUtil.generateToken(u.getEmail(), u.getPassword()));
 
         return token;
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            jwtUtil.validateToken(token);
+            return true;
+        } catch (JwtException e){
+            return false;
+        }
     }
 
 
